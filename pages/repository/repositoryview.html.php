@@ -25,7 +25,7 @@
     <?php } ?>
   </tr>
 </thead>
-      
+
 <tfoot>
   <tr>
     <td>
@@ -75,8 +75,8 @@
     </td>
     <?php if (GetBoolValue("ApacheWebLink") || GetBoolValue("CustomWebLink")) { ?>
     <td align="center">
-      <?php if (GetBoolValue("ApacheWebLink")) { ?><a href="<?php print($item->apacheWebLink); ?>" target="_blank"><img src="templates/images/apache-icon.png" alt="A" title="Apache WebDAV"></a><?php } ?>
-      <?php if (GetBoolValue("CustomWebLink")) { ?><a href="<?php print($item->customWebLink); ?>" target="_blank"><img src="templates/images/weblink-icon.gif" alt="W" title="Custom Subversion Browser"></a><?php } ?>
+      <?php if (GetBoolValue("ApacheWebLink")) { ?><a href="<?php print($item->apacheWebLink); ?>"><img src="templates/images/apache-icon.png" alt="A" title="Apache WebDAV"></a><?php } ?>
+      <?php if (GetBoolValue("CustomWebLink")) { ?><a href="<?php print($item->customWebLink); ?>"><img src="templates/images/weblink-icon.gif" alt="W" title="Custom Subversion Browser"></a><?php } ?>
     </td>
     <?php } ?>
   </tr>
