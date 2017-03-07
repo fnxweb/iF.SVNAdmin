@@ -20,7 +20,7 @@ $(document).ready(function(){
 <p class="hdesc"><?php Translate("Create a new repository to manage your sources."); ?></p>
 <div>
   <form method="POST" action="repositorycreate.php">
-	  
+
 	<div class="form-field">
 		<label for="pi"><?php Translate('Repository location'); ?></label>
 		<select name="pi" id="pi" class="">
@@ -57,6 +57,11 @@ $(document).ready(function(){
     <div class="form-field">
       <label for="accesspathcreate"><?php Translate("Access-Path"); ?></label>
       <input type="checkbox" name="accesspathcreate" id="accesspathcreate" value="1" checked> <?php Translate("Create"); ?>
+    </div>
+
+    <div class="form-field">
+      <label for="installhooks"><?php Translate("Custom hook scripts"); ?></label>
+      <input type="checkbox" name="installhooks" id="installhooks" value="1" checked> <?php Translate("Install"); ?>
     </div>
 
     <div class="form-field">

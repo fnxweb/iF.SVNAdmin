@@ -45,7 +45,7 @@ else {
 		try {
 			if (get_request_var("accesspathcreate") != NULL
 				&& $engine->isProviderActive(PROVIDER_ACCESSPATH_EDIT)) {
-				
+
 				$ap = new \svnadmin\core\entities\AccessPath($reponame . ':/');
 
 				if ($engine->getAccessPathEditProvider()->createAccessPath($ap)) {
@@ -57,11 +57,46 @@ else {
 			$engine->addException($e2);
 		}
 
+    // Install custom hook scripts
+    try {
+      if (get_request_var("installhooks") != NULL) {
+
+        // Find path to new repo
+        $ri = $r->getParentIdentifier();
+        if ($ri == 0)
+        {
+          // Default SVNParentPath
+          $svnParentPath = $engine->getConfig()->getValue('Repositories:svnclient', 'SVNParentPath');
+        }
+        else
+        {
+          // Secondary SVNParentPath
+          $config = $engine->getConfig();
+          $svnParentPath = $config->getValue('Repositories:svnclient:' . $ri, 'SVNParentPath');
+        }
+
+        // Do it
+        $repoPath = $svnParentPath . "/" . $reponame;
+        $hooksPath = $repoPath . "/hooks";
+        $defaultHooksPath = $svnParentPath . "/SVN-Template/hooks";
+        if (file_exists($hooksPath) && file_exists($defaultHooksPath))
+        {
+          exec( "/bin/rm -f '" . $hooksPath . "'/*.tmpl" );
+          exec( "/bin/cp -fax '" . $defaultHooksPath . "' '" . $repoPath . "'" );
+          exec( "/bin/cp -fax '" . $hooksPath . "/local-configs/__-config.pl' '" . $hooksPath . "/local-configs/" . $reponame . "-config.pl'" );
+          $engine->addMessage("Stock hooks applied to new repository");
+        }
+      }
+    }
+    catch (Exception $e2) {
+      $engine->addException($e2);
+    }
+
 		// Create a initial repository structure.
 		try {
 			$repoPredefinedStructure = get_request_var("repostructuretype");
 			if ($repoPredefinedStructure != NULL) {
-				
+
 				switch ($repoPredefinedStructure) {
 					case "single":
 						$engine->getRepositoryEditProvider()
