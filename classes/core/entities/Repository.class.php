@@ -26,7 +26,7 @@ class Repository
 	 * @var string
 	 */
 	public $name;
-	
+
 	/**
 	 * The parent identifier of the repository.
 	 * (Association to an SVNParentPath)
@@ -36,9 +36,9 @@ class Repository
 
 	/**
 	 * Constructor.
-	 * 
+	 *
 	 * @param string $name
-	 * @param string $parentIdentifier 
+	 * @param string $parentIdentifier
 	 */
 	public function __construct($name = null, $parentIdentifier = null)
 	{
@@ -50,7 +50,7 @@ class Repository
 	{
 		return $this->name;
 	}
-	
+
 	public function getParentIdentifier()
 	{
 		return $this->parentIdentifier;
@@ -60,7 +60,7 @@ class Repository
 	{
 		return rawurlencode($this->name);
 	}
-	
+
 	public function getEncodedParentIdentifier()
 	{
 		return rawurlencode($this->parentIdentifier);
@@ -68,10 +68,12 @@ class Repository
 
 	public static function compare( $o1, $o2 )
 	{
-		if ($o1->name == $o2->name) {
+    $o1name = strtolower($o1->name);
+    $o2name = strtolower($o2->name);
+		if ($o1name == $o2name) {
 			return 0;
 		}
-		return ($o1->name > $o2->name) ? +1 : -1;
+		return ($o1name > $o2name) ? +1 : -1;
 	}
 }
 ?>

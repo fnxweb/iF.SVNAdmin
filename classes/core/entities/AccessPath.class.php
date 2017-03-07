@@ -68,11 +68,13 @@ namespace svnadmin\core\entities
 
     public static function compare( $o1, $o2 )
     {
-      if( $o1->path == $o2->path )
+      $o1path = strtolower($o1->path);
+      $o2path = strtolower($o2->path);
+      if( $o1path == $o2path )
       {
         return 0;
       }
-      return ($o1->path > $o2->path) ? +1 : -1;
+      return ($o1path > $o2path) ? +1 : -1;
     }
   }
 }
