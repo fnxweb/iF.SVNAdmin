@@ -51,6 +51,19 @@ else {
 				if ($engine->getAccessPathEditProvider()->createAccessPath($ap)) {
 					$engine->getAccessPathEditProvider()->save();
 				}
+
+        // Add default read-only (TBD option for this?), admin can remove later if need be.
+        // If not added, new repo often fails to show up on listings if user has mis-logged in.
+        $ou = new \svnadmin\core\entities\User;
+        $ou->id = '*';
+        $ou->name = '*';
+
+        $op = new \svnadmin\core\entities\Permission;
+        $op->perm = "Read";
+
+        if ($engine->getAccessPathEditProvider()->assignUserToAccessPath($ou, $ap, $op)) {
+          $engine->getAccessPathEditProvider()->save();
+        }
 			}
 		}
 		catch (Exception $e2) {
