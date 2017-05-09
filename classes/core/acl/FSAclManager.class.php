@@ -177,7 +177,25 @@ namespace svnadmin\core\acl
     public function getRolesOfUser($objUser)
     {
       $roles = array();
-      if ($this->assignments == null)
+
+      // Treat all users as users?
+      $E = \svnadmin\core\Engine::getInstance();
+      $config = $E->getConfig();
+      $allareusers = $config->getValueAsBoolean('ACLManager', 'AllAreUsers', false);
+      $userRole = NULL;
+      if ($allareusers)
+      {
+        // Create temp user role
+        $roleObj = $this->acl->getRoleByName("User");
+        if ($roleObj != NULL)
+        {
+          $userRole = new \svnadmin\core\entities\Role();
+          $userRole->name = $roleObj->getName();
+          $userRole->description = $roleObj->getDescription();
+        }
+      }
+
+      if (!$allareusers && $this->assignments == null)
         return $roles;
 
       if (isset($this->assignments[$objUser->getName()]) && is_array($this->assignments[$objUser->getName()]))
@@ -194,6 +212,11 @@ namespace svnadmin\core\acl
           }
         }
       }
+
+      // Force user role?
+      if ($allareusers && count($roles) == 0)
+        $roles[] = $userRole;
+
       return $roles;
     }
 
