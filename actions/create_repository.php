@@ -54,15 +54,22 @@ else {
 
         // Add default read-only (TBD option for this?), admin can remove later if need be.
         // If not added, new repo often fails to show up on listings if user has mis-logged in.
-        $ou = new \svnadmin\core\entities\User;
-        $ou->id = '*';
-        $ou->name = '*';
+        // As a workaround for SVN 1.10 breaking global access rules (they are overridden wholly by
+        // repo access rules) we need to add our admin access rules to each new repo.
+        // TBD again a config option for this?
+        $additions_r = array( '@admin', 'jira', '*' );
+        for ($addition = 0;  $addition < count($additions_r);  ++$addition)
+        {
+          $ou = new \svnadmin\core\entities\User;
+          $ou->id = $additions_r[$addition];
+          $ou->name = $additions_r[$addition];
 
-        $op = new \svnadmin\core\entities\Permission;
-        $op->perm = "Read";
+          $op = new \svnadmin\core\entities\Permission;
+          $op->perm = "Read";
 
-        if ($engine->getAccessPathEditProvider()->assignUserToAccessPath($ou, $ap, $op)) {
-          $engine->getAccessPathEditProvider()->save();
+          if ($engine->getAccessPathEditProvider()->assignUserToAccessPath($ou, $ap, $op)) {
+            $engine->getAccessPathEditProvider()->save();
+          }
         }
 			}
 		}
@@ -96,7 +103,7 @@ else {
         {
           exec( "/bin/rm -f '" . $hooksPath . "'/*.tmpl" );
           exec( "/bin/cp -fax '" . $defaultHooksPath . "' '" . $repoPath . "'" );
-          exec( "/bin/cp -fax '" . $hooksPath . "/local-configs/__-config.pl' '" . $hooksPath . "/local-configs/" . $reponame . "-config.pl'" );
+          exec( "/bin/cp -fax '" . $hooksPath . "/local-configs/__STOCKJIRA-config.pl' '" . $hooksPath . "/local-configs/" . $reponame . "-config.pl'" );
           $engine->addMessage("Stock hooks applied to new repository");
         }
       }
